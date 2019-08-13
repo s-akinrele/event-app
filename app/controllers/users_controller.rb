@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_action :find_user, only: [:show, :update, :destroy]
+
   def index
     @users = User.all
     json_response(@users)
@@ -11,7 +13,17 @@ class UsersController < ApplicationController
   end
 
   def update
+    @user.update(user_params)
+    head :no_content
+  end
 
+  def show
+    json_response(@user)
+  end
+
+  def destroy
+    @user.destroy
+    head :no_content
   end
 
   private
@@ -25,5 +37,9 @@ class UsersController < ApplicationController
       :birthdate,
       :phone_number
     )
+  end
+
+  def find_user
+    @user = User.find_by(id: params[:id])
   end
 end
